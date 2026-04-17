@@ -125,24 +125,28 @@ npm run start
 
 ---
 
+## Live Demo
+
+**Frontend:** [https://snippets-grza-1ic89p3e5-antonliadas-projects.vercel.app](https://snippets-grza-1ic89p3e5-antonliadas-projects.vercel.app)
+
+---
+
 ## Deployment
 
-Recommended setup for free hosting:
+Both services are deployed on **Vercel** as separate projects:
 
-| Service | Role |
-|---------|------|
-| [MongoDB Atlas](https://www.mongodb.com/cloud/atlas) | Database (free M0 tier) |
-| [Render](https://render.com) | NestJS backend |
-| [Vercel](https://vercel.com) | Next.js frontend |
+| Service | Role | Root directory |
+|---------|------|----------------|
+| [MongoDB Atlas](https://www.mongodb.com/cloud/atlas) | Database (free M0 tier) | — |
+| Vercel project #1 | NestJS backend (serverless) | `backend` |
+| Vercel project #2 | Next.js frontend | `frontend` |
 
-**Render config** (backend):
+**Backend Vercel project:**
 - Root directory: `backend`
-- Build: `npm install && npm run build`
-- Start: `node dist/main.js`
-- Env: `MONGODB_URI`, `PORT=3001`
+- Build Command: *(disabled)*
+- Install Command: `npm install`
+- Env: `MONGODB_URI=mongodb+srv://...`
 
-**Vercel config** (frontend):
+**Frontend Vercel project:**
 - Root directory: `frontend`
-- Env: `NEXT_PUBLIC_API_URL=https://your-app.onrender.com`
-
-> Note: Render free tier sleeps after 15 min of inactivity — first request after sleep takes ~30s.
+- Env: `NEXT_PUBLIC_API_URL=https://<your-backend>.vercel.app`
