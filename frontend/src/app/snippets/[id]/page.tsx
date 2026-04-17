@@ -8,10 +8,10 @@ import { Snippet } from '@/lib/types';
 import SnippetForm from '@/components/SnippetForm';
 import ConfirmDialog from '@/components/ConfirmDialog';
 
-const typeBadge: Record<string, string> = {
-  link: 'bg-blue-950 text-blue-300 border border-blue-800',
-  note: 'bg-emerald-950 text-emerald-300 border border-emerald-800',
-  command: 'bg-orange-950 text-orange-300 border border-orange-800',
+const typeConfig: Record<string, { badge: string; icon: string }> = {
+  link:    { badge: 'bg-blue-950 text-blue-300 border border-blue-800',         icon: '🔗' },
+  note:    { badge: 'bg-emerald-950 text-emerald-300 border border-emerald-800', icon: '📝' },
+  command: { badge: 'bg-orange-950 text-orange-300 border border-orange-800',    icon: '⚡' },
 };
 
 export default function SnippetDetailPage({
@@ -27,6 +27,7 @@ export default function SnippetDetailPage({
   const [editing, setEditing] = useState(false);
   const [showConfirm, setShowConfirm] = useState(false);
   const [deleting, setDeleting] = useState(false);
+  const [copied, setCopied] = useState(false);
 
   useEffect(() => {
     api
@@ -46,6 +47,13 @@ export default function SnippetDetailPage({
       setDeleting(false);
       setShowConfirm(false);
     }
+  }
+
+  async function handleCopy() {
+    if (!snippet) return;
+    await navigator.clipboard.writeText(snippet.content);
+    setCopied(true);
+    setTimeout(() => setCopied(false), 2000);
   }
 
   if (loading) {
@@ -71,6 +79,8 @@ export default function SnippetDetailPage({
   }
 
   if (!snippet) return null;
+
+  const cfg = typeConfig[snippet.type] ?? { badge: '', icon: '' };
 
   return (
     <main className="max-w-2xl mx-auto px-6 py-12">
@@ -101,12 +111,23 @@ export default function SnippetDetailPage({
         <div className="bg-zinc-900 border border-zinc-800 rounded-xl p-6">
           <div className="flex items-start justify-between gap-4 mb-4">
             <h1 className="text-2xl font-bold text-zinc-100 leading-tight">{snippet.title}</h1>
-            <span className={`shrink-0 text-xs px-2.5 py-1 rounded-full font-medium ${typeBadge[snippet.type] ?? ''}`}>
+            <span className={`shrink-0 flex items-center gap-1 text-xs px-2.5 py-1 rounded-full font-medium ${cfg.badge}`}>
+              <span>{cfg.icon}</span>
               {snippet.type}
             </span>
           </div>
 
-          <pre className="bg-zinc-950 border border-zinc-800 rounded-lg p-4 text-sm text-zinc-300 overflow-auto whitespace-pre-wrap break-all mb-4 leading-relaxed font-mono">{snippet.content}</pre>
+          <div className="relative mb-4 group/code">
+            <pre className="bg-zinc-950 border border-zinc-800 rounded-lg p-4 text-sm text-zinc-300 overflow-auto whitespace-pre-wrap break-all leading-relaxed font-mono">
+              {snippet.content}
+            </pre>
+            <button
+              onClick={handleCopy}
+              className="absolute top-2 right-2 px-2.5 py-1 rounded-md bg-zinc-800 hover:bg-zinc-700 border border-zinc-700 text-zinc-400 hover:text-zinc-200 text-xs transition-all opacity-0 group-hover/code:opacity-100"
+            >
+              {copied ? '✓ Copied' : 'Copy'}
+            </button>
+          </div>
 
           {snippet.tags.length > 0 && (
             <div className="flex flex-wrap gap-2 mb-4">

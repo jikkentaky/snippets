@@ -7,24 +7,28 @@ interface Props {
   snippet: Snippet;
 }
 
-const typeBadge: Record<string, string> = {
-  link: 'bg-blue-950 text-blue-300 border border-blue-800',
-  note: 'bg-emerald-950 text-emerald-300 border border-emerald-800',
-  command: 'bg-orange-950 text-orange-300 border border-orange-800',
+const typeConfig: Record<string, { badge: string; border: string; icon: string }> = {
+  link:    { badge: 'bg-blue-950 text-blue-300 border border-blue-800',     border: 'border-l-blue-500',    icon: '🔗' },
+  note:    { badge: 'bg-emerald-950 text-emerald-300 border border-emerald-800', border: 'border-l-emerald-500', icon: '📝' },
+  command: { badge: 'bg-orange-950 text-orange-300 border border-orange-800',  border: 'border-l-orange-500',  icon: '⚡' },
 };
 
 export default function SnippetCard({ snippet }: Props) {
   const preview =
     snippet.content.length > 120 ? snippet.content.slice(0, 120) + '…' : snippet.content;
+  const cfg = typeConfig[snippet.type] ?? { badge: '', border: '', icon: '' };
 
   return (
     <Link href={`/snippets/${snippet._id}`}>
-      <div className="group bg-zinc-900 border border-zinc-800 rounded-xl p-6 hover:border-violet-700 hover:bg-zinc-800/60 transition-all cursor-pointer">
+      <div
+        className={`group bg-zinc-900 border border-zinc-800 border-l-4 ${cfg.border} rounded-xl p-6 hover:border-violet-700 hover:border-l-4 hover:${cfg.border} hover:bg-zinc-800/60 transition-all cursor-pointer`}
+      >
         <div className="flex items-start justify-between gap-3 mb-3">
           <h3 className="font-semibold text-zinc-100 group-hover:text-violet-300 transition-colors leading-tight">
             {snippet.title}
           </h3>
-          <span className={`shrink-0 text-xs px-2.5 py-1 rounded-full font-medium ${typeBadge[snippet.type] ?? ''}`}>
+          <span className={`shrink-0 flex items-center gap-1 text-xs px-2.5 py-1 rounded-full font-medium ${cfg.badge}`}>
+            <span>{cfg.icon}</span>
             {snippet.type}
           </span>
         </div>

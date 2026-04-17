@@ -9,7 +9,11 @@ interface Props {
   onCancel: () => void;
 }
 
-const TYPES: SnippetType[] = ['link', 'note', 'command'];
+const TYPES: { value: SnippetType; label: string; icon: string }[] = [
+  { value: 'link',    label: 'Link',    icon: '🔗' },
+  { value: 'note',    label: 'Note',    icon: '📝' },
+  { value: 'command', label: 'Command', icon: '⚡' },
+];
 
 const inputClass =
   'w-full bg-zinc-800 border border-zinc-700 rounded-lg px-3 py-2 text-sm text-zinc-100 placeholder-zinc-500 focus:outline-none focus:ring-2 focus:ring-violet-500 focus:border-transparent transition-colors';
@@ -80,18 +84,24 @@ export default function SnippetForm({ initialData, onSubmit, onCancel }: Props) 
       </div>
 
       <div>
-        <label className="block text-sm font-medium text-zinc-300 mb-1">Type</label>
-        <select
-          value={type}
-          onChange={(e) => setType(e.target.value as SnippetType)}
-          className={inputClass}
-        >
-          {TYPES.map((t) => (
-            <option key={t} value={t} className="bg-zinc-800">
-              {t}
-            </option>
+        <label className="block text-sm font-medium text-zinc-300 mb-2">Type</label>
+        <div className="flex gap-2">
+          {TYPES.map(({ value, label, icon }) => (
+            <button
+              key={value}
+              type="button"
+              onClick={() => setType(value)}
+              className={`flex-1 flex items-center justify-center gap-1.5 px-3 py-2 rounded-lg text-sm font-medium border transition-colors ${
+                type === value
+                  ? 'bg-violet-600 border-violet-500 text-white'
+                  : 'bg-zinc-800 border-zinc-700 text-zinc-400 hover:text-zinc-200 hover:border-zinc-600'
+              }`}
+            >
+              <span>{icon}</span>
+              {label}
+            </button>
           ))}
-        </select>
+        </div>
       </div>
 
       <div>

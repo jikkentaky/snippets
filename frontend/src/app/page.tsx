@@ -4,6 +4,7 @@ import { useState, useEffect, useCallback } from 'react';
 import { api } from '@/lib/api';
 import { PaginatedResponse } from '@/lib/types';
 import SnippetCard from '@/components/SnippetCard';
+import SkeletonCard from '@/components/SkeletonCard';
 import SearchBar from '@/components/SearchBar';
 import TagFilter from '@/components/TagFilter';
 import Pagination from '@/components/Pagination';
@@ -63,9 +64,10 @@ export default function HomePage() {
       </div>
 
       {loading && (
-        <div className="flex flex-col items-center justify-center py-24 gap-3">
-          <div className="w-8 h-8 border-2 border-violet-600 border-t-transparent rounded-full animate-spin" />
-          <p className="text-zinc-500 text-sm">Loading snippets…</p>
+        <div className="flex flex-col gap-3">
+          {Array.from({ length: 4 }).map((_, i) => (
+            <SkeletonCard key={i} />
+          ))}
         </div>
       )}
 
