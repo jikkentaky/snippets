@@ -3,7 +3,7 @@ import type { Request, Response } from 'express';
 import { NestFactory } from '@nestjs/core';
 import { ExpressAdapter } from '@nestjs/platform-express';
 import { ValidationPipe } from '@nestjs/common';
-import { AppModule } from '../src/app.module.js';
+import { AppModule } from '../src/app.module';
 
 const server = express();
 let initialized = false;
